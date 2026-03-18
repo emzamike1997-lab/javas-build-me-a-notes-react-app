@@ -40,13 +40,13 @@ body {
 }
 
 .header nav a {
-  color: #66d9ef;
+  color: #fff;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .header nav a:hover {
-  color: #8be9fd;
+  color: #66d9ef;
 }
 
 .main {
