@@ -1,15 +1,17 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'YOUR_API_KEY',
   authDomain: 'YOUR_AUTH_DOMAIN',
   projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_STORAGE_BUCKET',
-  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-  appId: 'YOUR_APP_ID',
 };
 
 firebase.initializeApp(firebaseConfig);
 
-export default firebase;
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+const db = firebase.firestore();
+
+export { auth, provider, db };
