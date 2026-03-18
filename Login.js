@@ -1,41 +1,40 @@
 import React, { useState } from 'react';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
+import { auth, provider } from './firebase.js';
 
-function Login({ setUser }) {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
-        const user = userCredential.user;
-        setUser(user);
-        localStorage.setItem('user', JSON.stringify(user));
+  const handleLogin = (e) => {
+    e.preventDefault();
+    auth.signInWithEmailAndPassword(email, password)
+      .then((user) => {
+        console.log(user);
       })
-      .catch(error => {
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
         console.error(error);
       });
   };
 
   return (
     <div>
-      <h1>Login</h1>
-      <input
-        type="email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button onClick={handleLogin}>Login</button>
+      <form onSubmit={handleLogin}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button type="submit">Login</button>
+      </form>
+      <button onClick={handleGoogleLogin}>Login with Google</button>
     </div>
   );
 }
