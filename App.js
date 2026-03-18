@@ -1,37 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import Note from './Note.js';
-import AddNote from './AddNote.js';
+import NotesList from './NotesList.js';
+import NoteForm from './NoteForm.js';
+import Login from './Login.js';
+import { auth } from './firebase.js';
 
 function App() {
-    const [notes, setNotes] = useState([]);
-    const [newNote, setNewNote] = useState('');
+  const [notes, setNotes] = useState([]);
+  const [user, setUser] = useState(null);
 
-    useEffect(() => {
-        const storedNotes = localStorage.getItem('notes');
-        if (storedNotes) {
-            setNotes(JSON.parse(storedNotes));
-        }
-    }, []);
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
 
-    const addNote = (note) => {
-        setNotes([...notes, note]);
-        localStorage.setItem('notes', JSON.stringify([...notes, note]));
-    };
-
-    const deleteNote = (id) => {
-        setNotes(notes.filter((note) => note.id !== id));
-        localStorage.setItem('notes', JSON.stringify(notes.filter((note) => note.id !== id)));
-    };
-
-    return (
+  return (
+    <div>
+      {user ? (
         <div>
-            <h1>Notes App</h1>
-            <AddNote addNote={addNote} />
-            {notes.map((note) => (
-                <Note key={note.id} note={note} deleteNote={deleteNote} />
-            ))}
+          <NotesList notes={notes} setNotes={setNotes} />
+          <NoteForm setNotes={setNotes} />
         </div>
-    );
+      ) : (
+        <Login />
+      )}
+    </div>
+  );
 }
 
 export default App;
